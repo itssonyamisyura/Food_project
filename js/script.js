@@ -113,15 +113,19 @@ window.addEventListener('DOMContentLoaded', () => {
           modal = document.querySelector('.modal'),
           modalCloseBtn = document.querySelector('[data-close]');
 
+
+    function openModal() {
+    // modal.classList.add('show');
+    // modal.classList.remove('hide');
+    modal.classList.toggle('show');
+    document.body.style.overflow = 'hidden';
+    clearInterval(modalTimerId); //if user opens modal w, we dont show it once again
+    }
+
     modalTrigger.forEach(btn => {
-        btn.addEventListener('click', ()=> {
-            // modal.classList.add('show');
-            // modal.classList.remove('hide');
-            modal.classList.toggle('show');
-            document.body.style.overflow = 'hidden';
-        });
+        btn.addEventListener('click', openModal);
     });
-    
+
     function closeModal() {
         // modal.classList.add ('hide');
         // modal.classList.remove('show');
@@ -142,4 +146,16 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
     });
+
+    const modalTimerId = setTimeout(openModal, 5000);
+
+    function showModalByScroll() {
+        // отслежиаем, когда пользователь долистает до конца страницы 
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) { //сколько px сверху отлистал польз. по оси y(прокрутка) + видимая часть >= полная прокрутка и контент, который есть 
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll) 
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
 });// назначение глобального обработчика событий
