@@ -234,4 +234,51 @@ window.addEventListener('DOMContentLoaded', () => {
         'menu__item'
 
     ).render();
+
+    // forms 
+
+    const forms = document.querySelectorAll('form');
+
+    const message = { // список фраз для пользователя после отправки формы
+        loading: 'Загрузка',
+        success: 'Спасибо! Скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так...'
+    }
+
+    forms.forEach (item => {
+        postData(item); // на каждую форму подвязываем функцию postData
+    });
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); // отменяем станд поведение браузера, чтоб не перезагружался при отправке формы
+
+            const statusMessage = document.createElement('div');
+            statusMessage.classList.add('status');
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage); // добавляем сообщение форме
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            
+            // request.setRequestHeader('Content-type', 'multipart/form-data') //автоматически установится
+            const formData = new FormData(form);
+
+            request.send(formData); // send to server
+
+            request.addEventListener('load', () => { // конечная загрузка запроса
+                if (request.status === 200) {
+                    console.log(request.response);
+                    statusMessage.textContent = message.success;
+                    form.reset();
+                    setTimeout(() => {
+                        statusMessage.remove();
+                    }, 2000);
+                } else {
+                    statusMessage.textContent = message.failure;
+                }
+            });
+        });
+    }
+
 });// назначение глобального обработчика событийd
