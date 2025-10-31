@@ -261,10 +261,18 @@ window.addEventListener('DOMContentLoaded', () => {
             const request = new XMLHttpRequest();
             request.open('POST', 'server.php');
             
-            // request.setRequestHeader('Content-type', 'multipart/form-data') //автоматически установится
+            request.setRequestHeader('Content-type', 'application/json')
             const formData = new FormData(form);
 
-            request.send(formData); // send to server
+            const object = {};
+            formData.forEach(function(value, key) {
+                object[key] = value;
+                // на основании данных в formData, формируем object при помощи перебора
+            });
+
+            const json = JSON.stringify(object);
+
+            request.send(json); // send to server
 
             request.addEventListener('load', () => { // конечная загрузка запроса
                 if (request.status === 200) {
