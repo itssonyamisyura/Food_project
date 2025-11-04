@@ -259,32 +259,32 @@ window.addEventListener('DOMContentLoaded', () => {
         
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-            
-            request.setRequestHeader('Content-type', 'application/json')
-            const formData = new FormData(form);
+            const formData = new FormData(form); //собираем все данные из нашей формы
 
-            const object = {};
-            formData.forEach(function(value, key) {
-                object[key] = value;
-                // на основании данных в formData, формируем object при помощи перебора
-            });
+            // const object = {};
+            // formData.forEach(function(value, key) {
+            //     object[key] = value;
+            //     // на основании данных в formData, формируем object при помощи перебора
+            // });
 
-            const json = JSON.stringify(object);
+            // const json = JSON.stringify(object);
 
-            request.send(json); // send to server
-
-            request.addEventListener('load', () => { // конечная загрузка запроса
-                if (request.status === 200) {
-                    console.log(request.response);
-                    showThanksModal(message.success);
-                    form.reset();
-                    statusMessage.remove();
-                } else {
-                    showThanksModal(message.failure);
-                }
-            });
+            fetch('server.php', { // отправляем данные на сервер без json
+                method: 'POST',
+                // headers: {
+                //     'Content-type': 'application/json'
+                // },
+                body: formData
+            }).then(data => data.text()) // модифицируем данные в текст
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success);
+                statusMessage.remove();
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
+            })
         });
     }
 
