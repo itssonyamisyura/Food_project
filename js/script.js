@@ -261,21 +261,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(form); //собираем все данные из нашей формы
 
-            // const object = {};
-            // formData.forEach(function(value, key) {
-            //     object[key] = value;
-            //     // на основании данных в formData, формируем object при помощи перебора
-            // });
+            const object = {};
+            formData.forEach(function(value, key) {
+                object[key] = value;
+            });
 
-            // const json = JSON.stringify(object);
-
-            fetch('server.php', { // отправляем данные на сервер без json
+            fetch('server.php', { // отправляем данные json
                 method: 'POST',
-                // headers: {
-                //     'Content-type': 'application/json'
-                // },
-                body: formData
-            }).then(data => data.text()) // модифицируем данные в текст
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text()) // модифицируем данные в текст
             .then(data => {
                 console.log(data);
                 showThanksModal(message.success);
