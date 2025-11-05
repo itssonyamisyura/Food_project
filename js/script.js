@@ -243,10 +243,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     forms.forEach (item => {
-        postData(item); // на каждую форму подвязываем функцию postData
+        bindPostData(item); // на каждую форму подвязываем функцию postData
     });
 
-    function postData(form) {
+    const postData = async (url, data) => { //передаем url, который передается дальше в fetch, data (данные) которые будут поститься в этой функции
+        const res = await fetch(url, { // посылает запрос на сервер
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
+        }); 
+
+        return await res.json() // возвращаем promise
+    };
+
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault(); // отменяем станд поведение браузера, чтоб не перезагружался при отправке формы
 
@@ -261,19 +273,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(form); //собираем все данные из нашей формы
 
-            const object = {};
-            formData.forEach(function(value, key) {
-                object[key] = value;
-            });
+            const json = JSON.stringify(Object.fromEntries(formData.entries())); // превращаем в массив массивов, после в классический объект, после в json
 
-            fetch('server.php', { // отправляем данные json
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(object)
-            })
-            .then(data => data.text()) // модифицируем данные в текст
+            postData('http://localhost:3000/requests', json) // отправляем json на сервер
             .then(data => {
                 console.log(data);
                 showThanksModal(message.success);
