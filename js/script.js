@@ -307,8 +307,60 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
-    fetch('http://localhost:3000/menu')
-        .then(data => data.json()) // берем ответ от сервера и превращаем в js объект
-        .then(res => console.log(res)); // результат в консоль
+    // fetch('http://localhost:3000/menu')
+    //     .then(data => data.json()) // берем ответ от сервера и превращаем в js объект
+    //     .then(res => console.log(res)); // результат в консоль
 
+    // slider
+
+    const slides = document.querySelectorAll('.offer__slide'),
+          prev = document.querySelector('.offer__slider-prev'),
+          next = document.querySelector('.offer__slider-next'),
+          total = document.querySelector('#total'),
+          current = document.querySelector('#current');
+    let slideIndex = 1; // определяет текущее положение в слайдере
+
+    showSlides(slideIndex); //инициализация слайдера
+
+    // total slides
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
+    // показывание и скрытие слайдов
+    function showSlides(n) { 
+        if (n > slides.length) { // если ушли в правую границу, то перемещаемся в начало
+            slideIndex = 1;
+        }
+
+        if (n < 1) { // уходим в левую границу, перемещаемся в конец 
+            slideIndex = slides.length;
+        }
+
+        // скрываем все слайдеры, кроме того, что нас интересует
+        slides.forEach(item => item.style.display = 'none');
+
+        slides[slideIndex - 1].style.display = 'block';
+
+        // current slide
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n)
+    }
+ 
+    // назначаем обработчики событий
+    prev.addEventListener('click', () => {
+        plusSlides(-1);
+    });
+    next.addEventListener('click', () => {
+        plusSlides(1);
+    });
 });// назначение глобального обработчика событий
