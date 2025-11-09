@@ -325,6 +325,19 @@ window.addEventListener('DOMContentLoaded', () => {
     let slideIndex = 1; // определяет текущее положение в слайдере
     let offset = 0; // отступ
 
+    function updateDotsOpacity(dots, slideIndex) {
+        dots.forEach(dot  => dot.style.opacity = '.5');
+        dots[slideIndex - 1].style.opacity = 1;
+    }
+
+    function updateCurrentSlide(current, slideIndex, slides) {
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
     if (slides.length < 10) {
         total.textContent = `0${slides.length}`;
         current.textContent = `0${slideIndex}`;
@@ -413,8 +426,7 @@ window.addEventListener('DOMContentLoaded', () => {
             current.textContent = slideIndex;
         }
 
-        dots.forEach(dot  => dot.style.opacity = '.5');
-        dots[slideIndex - 1].style.opacity = 1;
+        updateDotsOpacity(dots, slideIndex);
     });
 
     prev.addEventListener('click', () => {
@@ -432,14 +444,9 @@ window.addEventListener('DOMContentLoaded', () => {
             slideIndex--;
         }
 
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
+        updateCurrentSlide(current, slideIndex, slides);
 
-        dots.forEach(dot  => dot.style.opacity = '.5');
-        dots[slideIndex - 1].style.opacity = 1;
+        updateDotsOpacity(dots, slideIndex);
     });
 
     dots.forEach(dot => {
@@ -453,14 +460,9 @@ window.addEventListener('DOMContentLoaded', () => {
             slidesField.style.transform = `translateX(-${offset}px)`;
 
             //текущий слайд
-            if (slides.length < 10) {
-                current.textContent = `0${slideIndex}`;
-            } else {
-                current.textContent = slideIndex;
-            }
+            updateCurrentSlide(current, slideIndex, slides);
 
-            dots.forEach(dot  => dot.style.opacity = '.5');
-            dots[slideIndex - 1].style.opacity = 1;
+            updateDotsOpacity(dots, slideIndex);
         });
     });
 
