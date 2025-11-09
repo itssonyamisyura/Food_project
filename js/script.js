@@ -317,50 +317,120 @@ window.addEventListener('DOMContentLoaded', () => {
           prev = document.querySelector('.offer__slider-prev'),
           next = document.querySelector('.offer__slider-next'),
           total = document.querySelector('#total'),
-          current = document.querySelector('#current');
+          current = document.querySelector('#current'),
+          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+          slidesField = document.querySelector('.offer__slider-inner'),
+          width = window.getComputedStyle(slidesWrapper).width; // сколько места занимает главный блок(img) = окошко, через которое мы видим слайды
     let slideIndex = 1; // определяет текущее положение в слайдере
+    let offset = 0; // отступ
 
-    showSlides(slideIndex); //инициализация слайдера
-
-    // total slides
     if (slides.length < 10) {
         total.textContent = `0${slides.length}`;
+        current.textContent = `0${slideIndex}`;
     } else {
         total.textContent = slides.length;
+        current.textContent = slideIndex;
     }
 
-    // показывание и скрытие слайдов
-    function showSlides(n) { 
-        if (n > slides.length) { // если ушли в правую границу, то перемещаемся в начало
+    slidesField.style.width = 100 * slides.length + '%'; // выстраивает вокруг себя слайды--> помещаем все слайды, что есть на странице во внутрь slidesField
+
+    slidesField.style.display = 'flex';
+    slidesField.style.transition = '0.5s all';
+
+    // скрываем элементы которые не попадают в область видимости wrapper
+    slidesWrapper.style.overflow = 'hidden';
+
+    slides.forEach(slide => {
+        slide.style.width = width;
+    });
+
+    next.addEventListener('click', () => {
+        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) { // '500px'
+            offset = 0; // долистали до конца, возвращаемся в начало
+        } else {
+            offset += +width.slice(0, width.length - 2)
+        }
+
+        slidesField.style.transform = `translateX(-${offset}px)`
+
+        if (slideIndex == slides.length) {
             slideIndex = 1;
+        } else {
+            slideIndex++;
         }
 
-        if (n < 1) { // уходим в левую границу, перемещаемся в конец 
-            slideIndex = slides.length;
-        }
-
-        // скрываем все слайдеры, кроме того, что нас интересует
-        slides.forEach(item => item.style.display = 'none');
-
-        slides[slideIndex - 1].style.display = 'block';
-
-        // current slide
         if (slides.length < 10) {
             current.textContent = `0${slideIndex}`;
         } else {
             current.textContent = slideIndex;
         }
-    }
+    });
 
-    function plusSlides(n) {
-        showSlides(slideIndex += n)
-    }
- 
-    // назначаем обработчики событий
     prev.addEventListener('click', () => {
-        plusSlides(-1);
+        if (offset == 0) { // когда у нас 1й слайд, мы перемещаеся в конец
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1) 
+        } else {
+            offset -= +width.slice(0, width.length - 2)
+        }
+
+        slidesField.style.transform = `translateX(-${offset}px)`
+
+        if (slideIndex == 1) {
+            slideIndex = slides.length; // смещаемся в конец
+        } else {
+            slideIndex--;
+        }
+
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
     });
-    next.addEventListener('click', () => {
-        plusSlides(1);
-    });
+
+
+
+    // showSlides(slideIndex); //инициализация слайдера
+
+    // // total slides
+    // if (slides.length < 10) {
+    //     total.textContent = `0${slides.length}`;
+    // } else {
+    //     total.textContent = slides.length;
+    // }
+
+    // // показывание и скрытие слайдов
+    // function showSlides(n) { 
+    //     if (n > slides.length) { // если ушли в правую границу, то перемещаемся в начало
+    //         slideIndex = 1;
+    //     }
+
+    //     if (n < 1) { // уходим в левую границу, перемещаемся в конец 
+    //         slideIndex = slides.length;
+    //     }
+
+    //     // скрываем все слайдеры, кроме того, что нас интересует
+    //     slides.forEach(item => item.style.display = 'none');
+
+    //     slides[slideIndex - 1].style.display = 'block';
+
+    //     // current slide
+    //     if (slides.length < 10) {
+    //         current.textContent = `0${slideIndex}`;
+    //     } else {
+    //         current.textContent = slideIndex;
+    //     }
+    // }
+
+    // function plusSlides(n) {
+    //     showSlides(slideIndex += n)
+    // }
+ 
+    // // назначаем обработчики событий
+    // prev.addEventListener('click', () => {
+    //     plusSlides(-1);
+    // });
+    // next.addEventListener('click', () => {
+    //     plusSlides(1);
+    // });
 });// назначение глобального обработчика событий
