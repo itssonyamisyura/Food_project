@@ -525,6 +525,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // we check id, if id = 'height', записываем value в height
         input.addEventListener('input', () => {
+
+            // when user types smth, we check if there is smth else other than numbers
+            if (input.value.match(/\D/g)) {
+                input.style.border = '1px solid red';
+            } else {
+                input.style.border = 'none';
+            }
+
             switch(input.getAttribute('id')) {
                 case 'height':
                     height = +input.value;
