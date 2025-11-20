@@ -405,6 +405,11 @@ window.addEventListener('DOMContentLoaded', () => {
         dots.push(dot); // помещаем точку в массив
     } 
 
+    function deleteNotDigits(value) {
+        return +value.replace(/\D/g, '');
+    }
+    const slideWidth = deleteNotDigits(width);
+
     next.addEventListener('click', () => {
         if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) { // '500px'
             offset = 0; // долистали до конца, возвращаемся в начало
@@ -431,9 +436,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     prev.addEventListener('click', () => {
         if (offset == 0) { // когда у нас 1й слайд, мы перемещаеся в конец
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+            offset = slideWidth * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= slideWidth;
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`
@@ -454,7 +459,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const slideTo = e.target.getAttribute('data-slide-to');
 
             slideIndex = slideTo; 
-            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            offset = slideWidth * (slideTo - 1);
 
             // смещение слайдера
             slidesField.style.transform = `translateX(-${offset}px)`;
