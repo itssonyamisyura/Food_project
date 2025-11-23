@@ -1,14 +1,13 @@
-function slider() {
-    // slider
-
-    const slides = document.querySelectorAll('.offer__slide'),
-    slider = document.querySelector('.offer__slider'),
-    prev = document.querySelector('.offer__slider-prev'),
-    next = document.querySelector('.offer__slider-next'),
-    total = document.querySelector('#total'),
-    current = document.querySelector('#current'),
-    slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-    slidesField = document.querySelector('.offer__slider-inner'),
+function slider({container, slide, nextArrow, prevArrrow, totalCounter, currentCounter, wrapper, field}) {
+    
+    const slides = document.querySelectorAll(slide),
+    slider = document.querySelector(container),
+    prev = document.querySelector(prevArrrow),
+    next = document.querySelector(nextArrow),
+    total = document.querySelector(totalCounter),
+    current = document.querySelector(currentCounter),
+    slidesWrapper = document.querySelector(wrapper),
+    slidesField = document.querySelector(field),
     width = window.getComputedStyle(slidesWrapper).width; // сколько места занимает главный блок(img) = окошко, через которое мы видим слайды
     let slideIndex = 1; // определяет текущее положение в слайдере
     let offset = 0; // отступ
@@ -160,4 +159,4 @@ function slider() {
     });
 }
 
-module.exports = slider;
+export default slider;

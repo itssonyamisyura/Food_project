@@ -1,9 +1,8 @@
-function tabs() {
- // Tabs
+function tabs(tabsSelector, tabsContentSelector, tabsParentSelector, activeClass) {
 
-    const tabs = document.querySelectorAll('.tabheader__item'),
-    tabsContent = document.querySelectorAll('.tabcontent'),
-    tabsParent = document.querySelector('.tabheader__items');
+    const tabs = document.querySelectorAll(tabsSelector),
+    tabsContent = document.querySelectorAll(tabsContentSelector),
+    tabsParent = document.querySelector(tabsParentSelector);
 
    function hideTabContent() { //скрыть все и показать только тот, который нас интересует(1st)
        tabsContent.forEach(item => {
@@ -13,14 +12,14 @@ function tabs() {
        });
        
        tabs.forEach(item => {
-           item.classList.remove('tabheader__item_active');//у каждого из элементов табов удаляем класс активности
+           item.classList.remove(activeClass);//у каждого из элементов табов удаляем класс активности
        });
    }
 
    function showTabContent(i = 0) {
        tabsContent[i].classList.add('show', 'fade');
        tabsContent[i].classList.remove('hide');
-       tabs[i].classList.add('tabheader__item_active');
+       tabs[i].classList.add(activeClass);
    }
 
    hideTabContent();
@@ -30,7 +29,7 @@ function tabs() {
    tabsParent.addEventListener('click', (event) => {
        const target = event.target;
 
-       if (target && target.classList.contains('tabheader__item')) {
+       if (target && target.classList.contains(tabsSelector.slice(1))) {
            tabs.forEach((item, i) => {
                if (target == item) {// если тот элемент, в который мы кликнули, будет совпадать с эл, который мы перебираем, вызываем наши ф-ции
                    hideTabContent();
@@ -41,4 +40,4 @@ function tabs() {
    });
 }
 
-module.exports = tabs;
+export default tabs;

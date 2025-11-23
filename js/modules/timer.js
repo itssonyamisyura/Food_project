@@ -1,7 +1,4 @@
-function timer() {
-    // Timer
-
-    const deadline = '2025-12-28';
+function timer(id, deadline) {
 
     function getTimeRemaining(endtime) { //разница между deadline и текущим временем
         let days, hours, minutes, seconds;
@@ -39,7 +36,7 @@ function timer() {
 
     function setClock(selector, endtime) {
         //устанавливает таймер
-        const timer = document.querySelector(selector);
+        const timer = document.querySelector(selector),
               days = timer.querySelector('#days'),
               hours = timer.querySelector('#hours'),
               minutes = timer.querySelector('#minutes'),
@@ -63,7 +60,7 @@ function timer() {
             }
         }
     }
-    setClock('.timer', deadline);
+    setClock(id, deadline);
 }
-
-module.exports = timer;
+// module.exports = timer;
+export default timer;
