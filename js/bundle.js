@@ -978,7 +978,7 @@
       );
       (0, _modules_timer__WEBPACK_IMPORTED_MODULE_2__['default'])(
         '.timer',
-        '2025-12-28',
+        '2028-05-20',
       );
       (0, _modules_cards__WEBPACK_IMPORTED_MODULE_3__['default'])();
       (0, _modules_calc__WEBPACK_IMPORTED_MODULE_4__['default'])();
