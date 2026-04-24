@@ -240,19 +240,23 @@
           //         });
           //     });
 
-          axios.get('http://localhost:3000/menu').then((data) => {
-            data.data.forEach(({ img, altimg, title, descr, price }) => {
-              // обращаемся к тем данным, которые мы получили, а не к объекту с общей инф, которая была
-              new MenuCard(
-                img,
-                altimg,
-                title,
-                descr,
-                price,
-                '.menu .container',
-              ).render();
+          axios
+            .get(
+              'https://raw.githubusercontent.com/itssonyamisyura/Food_project/main/db.json',
+            )
+            .then((data) => {
+              data.data.menu.forEach(({ img, altimg, title, descr, price }) => {
+                // обращаемся к тем данным, которые мы получили, а не к объекту с общей инф, которая была
+                new MenuCard(
+                  img,
+                  altimg,
+                  title,
+                  descr,
+                  price,
+                  '.menu .container',
+                ).render();
+              });
             });
-          });
         }
 
         /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = cards;
