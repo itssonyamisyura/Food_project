@@ -1,81 +1,84 @@
-import { closeModal, openModal } from "./modal";
-import { postData } from "../services/services";
+import { closeModal, openModal } from './modal';
+import { postData } from '../services/services';
 
 function forms(formSelector, modalTimerId) {
-    // выносим селектор form как аргумент--> в файле script.js передаем селектор с тегом form
+  // выносим селектор form как аргумент--> в файле script.js передаем селектор с тегом form
 
-    const forms = document.querySelectorAll(formSelector);
+  const forms = document.querySelectorAll(formSelector);
 
-    const message = { // список фраз для пользователя после отправки формы
-        loading: 'img/form/spinner.svg',
-        success: 'Спасибо! Скоро мы с вами свяжемся',
-        failure: 'Что-то пошло не так...'
-    }
+  const message = {
+    // список фраз для пользователя после отправки формы
+    loading: 'img/form/spinner.svg',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...',
+  };
 
-    forms.forEach (item => {
-        bindPostData(item); // на каждую форму подвязываем функцию postData
-    });
+  forms.forEach((item) => {
+    bindPostData(item); // на каждую форму подвязываем функцию postData
+  });
 
-    function bindPostData(form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault(); // отменяем станд поведение браузера, чтоб не перезагружался при отправке формы
+  function bindPostData(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // отменяем станд поведение браузера, чтоб не перезагружался при отправке формы
 
-            const statusMessage = document.createElement('img');
-            statusMessage.src = message.loading;
-            statusMessage.style.cssText = `
+      const statusMessage = document.createElement('img');
+      statusMessage.src = message.loading;
+      statusMessage.style.cssText = `
                 display: block;
                 margin: 0 auto;
             `;
-        
-            form.insertAdjacentElement('afterend', statusMessage);
 
-            const formData = new FormData(form); //собираем все данные из нашей формы
+      form.insertAdjacentElement('afterend', statusMessage);
 
-            const json = JSON.stringify(Object.fromEntries(formData.entries())); // превращаем в массив массивов, после в классический объект, после в json
+      const formData = new FormData(form); //собираем все данные из нашей формы
 
-            postData('http://localhost:3000/requests', json) // отправляем json на сервер
-            .then(data => {
-                console.log(data);
-                showThanksModal(message.success);
-                statusMessage.remove();
-            }).catch(() => {
-                showThanksModal(message.failure);
-            }).finally(() => {
-                form.reset();
-            })
+      const json = JSON.stringify(Object.fromEntries(formData.entries())); // превращаем в массив массивов, после в классический объект, после в json
+
+      postData('https://jsonplaceholder.typicode.com/posts', json) // отправляем json на сервер
+        .then((data) => {
+          console.log(data);
+          showThanksModal(message.success);
+          statusMessage.remove();
+        })
+        .catch(() => {
+          showThanksModal(message.failure);
+        })
+        .finally(() => {
+          form.reset();
         });
-    }
+    });
+  }
 
-    function showThanksModal(message) {
-        const prevModalDialog = document.querySelector('.modal__dialog');
+  function showThanksModal(message) {
+    const prevModalDialog = document.querySelector('.modal__dialog');
 
-        // скрываем элемент перед показом мод окна
-        prevModalDialog.classList.add('hide');
+    // скрываем элемент перед показом мод окна
+    prevModalDialog.classList.add('hide');
 
-        openModal('.modal', modalTimerId);
+    openModal('.modal', modalTimerId);
 
-        const thanksModal = document.createElement('div');
-        thanksModal.classList.add('modal__dialog');
-        thanksModal.innerHTML = `
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
+    thanksModal.innerHTML = `
             <div class="modal__content">
                 <div class="modal__close" data-close>×</div>
                 <div class="modal__title">${message}</div>
             </div>
         `;
 
-        document.querySelector('.modal').append(thanksModal);
+    document.querySelector('.modal').append(thanksModal);
 
-        setTimeout(() => {
-            thanksModal.remove();
-            // prevModalDialog.classList.add('show');
-            prevModalDialog.classList.remove('hide');
-            closeModal('.modal');
-        }, 4000);
-    }
+    setTimeout(() => {
+      thanksModal.remove();
+      // prevModalDialog.classList.add('show');
+      prevModalDialog.classList.remove('hide');
+      closeModal('.modal');
+    }, 4000);
+  }
 
-    // fetch('http://localhost:3000/menu')
-    //     .then(data => data.json()) // берем ответ от сервера и превращаем в js объект
-    //     .then(res => console.log(res)); // результат в консоль
+  // fetch('http://localhost:3000/menu')
+  //     .then(data => data.json()) // берем ответ от сервера и превращаем в js объект
+  //     .then(res => console.log(res)); // результат в консоль
 }
 
 export default forms;
