@@ -1,7 +1,6 @@
 # 🍔 Food Project
 
-A modern web application with interactive UI elements, animations, and dynamic content rendering.  
-Built using JavaScript with modular architecture and bundled via Gulp + Webpack.
+A web application for browsing food items, interacting with UI components, and working with dynamic content.
 
 👉 **Live Demo:** https://itssonyamisyura.github.io/Food_project/  
 👉 **Repository:** https://github.com/itssonyamisyura/Food_project  
@@ -10,14 +9,14 @@ Built using JavaScript with modular architecture and bundled via Gulp + Webpack.
 
 ## 🚀 About
 
-This project is a frontend application that demonstrates building interactive UI components and dynamic behavior using pure JavaScript.
+This project is a frontend application built with pure JavaScript that demonstrates working with dynamic UI, user interactions, and basic data handling.
 
 The app demonstrates:
 
-- Working with DOM manipulation  
+- DOM manipulation  
+- Working with dynamic content  
 - Handling user interactions  
-- Fetching and displaying data  
-- Building reusable modules  
+- Structuring a small-scale frontend project  
 
 ---
 
@@ -26,8 +25,9 @@ The app demonstrates:
 - 🍔 Interactive food menu  
 - 📦 Dynamic content rendering  
 - 📝 Form handling  
-- ⚡ Modular JavaScript architecture  
-- 📱 Responsive layout  
+- 📡 Working with local data / JSON  
+- ⚡ Instant UI updates  
+- 📱 Responsive interface  
 
 ---
 
@@ -36,12 +36,12 @@ The app demonstrates:
 ### Frontend
 - JavaScript (ES6+)  
 - HTML5  
-- CSS / SCSS  
+- CSS  
 
-### Build Tools
-- Gulp (task runner)  
-- Webpack (bundling)  
-- Babel (transpilation)  
+### Tools & Features
+- JSON (mock data)  
+- DOM API  
+- Modular JavaScript structure  
 
 ---
 
@@ -49,5 +49,4 @@ The app demonstrates:
 
 ```bash
 git clone https://github.com/itssonyamisyura/Food_project.git
-npm install
-npx gulp build
+cd Food_project
