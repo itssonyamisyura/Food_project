@@ -1,19 +1,34 @@
-function slider({container, slide, nextArrow, prevArrrow, totalCounter, currentCounter, wrapper, field}) {
-    
+function slider({ container, slide, nextArrow, prevArrrow, totalCounter, currentCounter, wrapper, field }) {
+
     const slides = document.querySelectorAll(slide),
-    slider = document.querySelector(container),
-    prev = document.querySelector(prevArrrow),
-    next = document.querySelector(nextArrow),
-    total = document.querySelector(totalCounter),
-    current = document.querySelector(currentCounter),
-    slidesWrapper = document.querySelector(wrapper),
-    slidesField = document.querySelector(field),
-    width = window.getComputedStyle(slidesWrapper).width; // сколько места занимает главный блок(img) = окошко, через которое мы видим слайды
-    let slideIndex = 1; // определяет текущее положение в слайдере
-    let offset = 0; // отступ
+        slider = document.querySelector(container),
+        prev = document.querySelector(prevArrrow),
+        next = document.querySelector(nextArrow),
+        total = document.querySelector(totalCounter),
+        current = document.querySelector(currentCounter),
+        slidesWrapper = document.querySelector(wrapper),
+        slidesField = document.querySelector(field);
+
+    let width = window.getComputedStyle(slidesWrapper).width;
+    let slideIndex = 1;
+    let offset = 0;
+
+    function deleteNotDigits(value) {
+        return +value.replace(/\D/g, '');
+    }
+
+    function updateSlider() {
+        width = window.getComputedStyle(slidesWrapper).width;
+        slidesField.style.width = 100 * slides.length + '%';
+        slides.forEach(slide => {
+            slide.style.width = width;
+        });
+        offset = deleteNotDigits(width) * (slideIndex - 1);
+        slidesField.style.transform = `translateX(-${offset}px)`;
+    }
 
     function updateDotsOpacity(dots, slideIndex) {
-        dots.forEach(dot  => dot.style.opacity = '.5');
+        dots.forEach(dot => dot.style.opacity = '.5');
         dots[slideIndex - 1].style.opacity = 1;
     }
 
@@ -33,23 +48,17 @@ function slider({container, slide, nextArrow, prevArrrow, totalCounter, currentC
         current.textContent = slideIndex;
     }
 
-    slidesField.style.width = 100 * slides.length + '%'; // выстраивает вокруг себя слайды--> помещаем все слайды, что есть на странице во внутрь slidesField
-
     slidesField.style.display = 'flex';
     slidesField.style.transition = '0.5s all';
 
     // скрываем элементы которые не попадают в область видимости wrapper
     slidesWrapper.style.overflow = 'hidden';
-
-    slides.forEach(slide => {
-        slide.style.width = width;
-    });
-
     slider.style.position = 'relative';
 
-    //создаем большую обвертку для всех точек
+    updateSlider();
+
     const indicators = document.createElement('ol'),
-            dots = [];
+        dots = [];
     indicators.classList.add('carousel-indicators');
     indicators.style.cssText = `
         position: absolute;
@@ -63,13 +72,12 @@ function slider({container, slide, nextArrow, prevArrrow, totalCounter, currentC
         margin-left: 15%;
         list-style: none;
     `;
-    // помещаем обвертку во внутрь слайдера
-    slider.append(indicators); 
+    slider.append(indicators);
 
     // основываясь на кол-ве слайдов создаем определенное кол-во точек
     for (let i = 0; i < slides.length; i++) {
         const dot = document.createElement('li');
-        dot.setAttribute('data-slide-to', i + 1); // атрибут -> первая точка идет к первому слайду
+        dot.setAttribute('data-slide-to', i + 1);
         dot.style.cssText = `
             box-sizing: content-box;
             flex: 0 1 auto;
@@ -90,73 +98,57 @@ function slider({container, slide, nextArrow, prevArrrow, totalCounter, currentC
         }
         indicators.append(dot);
         dots.push(dot); // помещаем точку в массив
-    } 
-
-    function deleteNotDigits(value) {
-        return +value.replace(/\D/g, '');
     }
-    const slideWidth = deleteNotDigits(width);
 
     next.addEventListener('click', () => {
-        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) { // '500px'
-            offset = 0; // долистали до конца, возвращаемся в начало
-        } else {
-            offset += +width.slice(0, width.length - 2)
-        }
-
-        slidesField.style.transform = `translateX(-${offset}px)`;
-
-        if (slideIndex == slides.length) {
+        width = window.getComputedStyle(slidesWrapper).width;
+        if (offset == deleteNotDigits(width) * (slides.length - 1)) {
+            offset = 0;
             slideIndex = 1;
         } else {
+            offset += deleteNotDigits(width);
             slideIndex++;
         }
 
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
-
+        slidesField.style.transform = `translateX(-${offset}px)`;
+        updateCurrentSlide(current, slideIndex, slides);
         updateDotsOpacity(dots, slideIndex);
     });
 
     prev.addEventListener('click', () => {
-        if (offset == 0) { // когда у нас 1й слайд, мы перемещаеся в конец
-            offset = slideWidth * (slides.length - 1);
+        width = window.getComputedStyle(slidesWrapper).width;
+        if (offset == 0) {
+            offset = deleteNotDigits(width) * (slides.length - 1);
+            slideIndex = slides.length;
         } else {
-            offset -= slideWidth;
-        }
-
-        slidesField.style.transform = `translateX(-${offset}px)`
-
-        if (slideIndex == 1) {
-            slideIndex = slides.length; // смещаемся в конец
-        } else {
+            offset -= deleteNotDigits(width);
             slideIndex--;
         }
 
+        slidesField.style.transform = `translateX(-${offset}px)`
         updateCurrentSlide(current, slideIndex, slides);
-
         updateDotsOpacity(dots, slideIndex);
     });
 
     dots.forEach(dot => {
         dot.addEventListener('click', (e) => {
+            width = window.getComputedStyle(slidesWrapper).width;
             const slideTo = e.target.getAttribute('data-slide-to');
 
-            slideIndex = slideTo; 
-            offset = slideWidth * (slideTo - 1);
+            slideIndex = slideTo;
+            offset = deleteNotDigits(width) * (slideTo - 1);
 
             // смещение слайдера
             slidesField.style.transform = `translateX(-${offset}px)`;
 
             //текущий слайд
             updateCurrentSlide(current, slideIndex, slides);
-
             updateDotsOpacity(dots, slideIndex);
         });
     });
+
+    window.addEventListener('resize', updateSlider);
 }
 
 export default slider;
+

@@ -5,6 +5,8 @@ import cards from './modules/cards';
 import calc from './modules/calc';
 import forms from './modules/forms';
 import slider from './modules/slider';
+import hamburger from './modules/hamburger';
+import animations from './modules/animations';
 import { openModal } from './modules/modal';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -20,7 +22,8 @@ window.addEventListener('DOMContentLoaded', () => {
     'tabheader__item_active',
   );
   modal('[data-modal]', '.modal', modalTimerId);
-  timer('.timer', '2029-05-20');
+  const deadline = new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  timer('.timer', deadline);
   cards();
   calc();
   forms('form', modalTimerId);
@@ -34,4 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
     wrapper: '.offer__slider-wrapper',
     field: '.offer__slider-inner',
   });
+  hamburger();
+  animations();
 });
