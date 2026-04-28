@@ -1028,3 +1028,12 @@ a {
 .btn {
     border-radius: 30px;
 }
+
+.hamburger {
+    z-index: 1100;
+}
+
+.header {
+    position: relative;
+    z-index: 1000;
+}
